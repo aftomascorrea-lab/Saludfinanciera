@@ -3,50 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinanzasPro V2</title>
+    <title>FinanzasPro Cloud</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-slate-900 text-white p-5">
     <div class="max-w-md mx-auto bg-slate-800 p-6 rounded-xl shadow-2xl border border-slate-700">
-        <h1 class="text-2xl font-bold text-green-400 mb-4">FinanzasPro</h1>
+        <h1 class="text-2xl font-bold text-green-400 mb-4">FinanzasPro Cloud</h1>
         
         <div class="space-y-4">
-            <input id="desc" type="text" placeholder="Concepto" class="w-full p-3 rounded bg-slate-700 border-none text-white">
-            <input id="val" type="number" placeholder="Monto $" class="w-full p-3 rounded bg-slate-700 border-none text-white">
-            <button onclick="guardar()" class="w-full bg-green-600 hover:bg-green-500 p-3 rounded font-bold transition">Guardar Dato</button>
+            <input id="desc" type="text" placeholder="Concepto" class="w-full p-3 rounded bg-slate-700 text-white">
+            <input id="val" type="number" placeholder="Monto $" class="w-full p-3 rounded bg-slate-700 text-white">
+            <button onclick="guardar()" class="w-full bg-green-600 p-3 rounded font-bold">Guardar en la Nube</button>
         </div>
 
         <div class="mt-8">
-            <h2 class="text-lg font-semibold border-b border-slate-700 mb-3">Tus Movimientos</h2>
+            <h2 class="text-lg font-semibold border-b border-slate-700 mb-3">Movimientos Sincronizados</h2>
             <ul id="lista" class="space-y-2"></ul>
-            <button onclick="borrarTodo()" class="mt-4 text-xs text-red-400 underline">Borrar todos mis datos</button>
         </div>
     </div>
 
     <script>
-        function mostrar() {
-            const datos = JSON.parse(localStorage.getItem('mis_finanzas') || '[]');
-            const lista = document.getElementById('lista');
-            lista.innerHTML = datos.map(d => `<li class="bg-slate-700 p-2 rounded flex justify-between"><span>${d.desc}</span><span class="font-mono text-green-400">$${d.val}</span></li>`).join('');
+        // CONFIGURACIÓN (Pega tus datos aquí)
+        const SUPABASE_URL = 'https://pibnwghhrnavyzjunkly.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpYm53Z2hocm5hdnl6anVua2x5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MzA4MDIsImV4cCI6MjA5MzMwNjgwMn0.xY0dJ6Zb_4lx0HRJ4YhRV3dLrPzhf9jxUWz6z4izxKI';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function mostrar() {
+            const { data, error } = await supabase.from('movimientos').select('*').order('created_at', { ascending: false });
+            if (data) {
+                const lista = document.getElementById('lista');
+                lista.innerHTML = data.map(d => `<li class="bg-slate-700 p-2 rounded flex justify-between"><span>${d.concepto}</span><span class="text-green-400">$${d.monto}</span></li>`).join('');
+            }
         }
 
-        function guardar() {
-            const desc = document.getElementById('desc').value;
-            const val = document.getElementById('val').value;
-            if(!desc || !val) return alert('¡Escribe algo!');
+        async function guardar() {
+            const concepto = document.getElementById('desc').value;
+            const monto = document.getElementById('val').value;
             
-            const datos = JSON.parse(localStorage.getItem('mis_finanzas') || '[]');
-            datos.push({desc, val});
-            localStorage.setItem('mis_finanzas', JSON.stringify(datos));
+            const { error } = await supabase.from('movimientos').insert([{ concepto, monto }]);
             
-            document.getElementById('desc').value = '';
-            document.getElementById('val').value = '';
-            mostrar();
-        }
-
-        function borrarTodo() {
-            if(confirm('¿Seguro? Se borrarán TUS datos en este dispositivo.')) {
-                localStorage.removeItem('mis_finanzas');
+            if (error) alert('Error: ' + error.message);
+            else {
+                document.getElementById('desc').value = '';
+                document.getElementById('val').value = '';
                 mostrar();
             }
         }
