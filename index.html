@@ -317,11 +317,24 @@ async function eliminarMovimiento(id) {
 
 // --- 6. AUTH Y CIERRE ---
 async function login() { 
-    const { error } = await _client.auth.signInWithPassword({ email: email.value, password: password.value });
-    if(error) alert("Error: " + error.message);
+    // Capturamos lo que escribiste en los cuadritos de texto
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    
+    // Intentamos entrar a Supabase
+    const { error } = await _client.auth.signInWithPassword({ email, password });
+    
+    if (error) {
+        alert("Credenciales incorrectas: " + error.message);
+    }
+    // Si no hay error, el "onAuthStateChange" de abajo te dejará pasar solito
 }
-async function logout() { await _client.auth.signOut(); location.reload(); }
 
+async function logout() { 
+    await _client.auth.signOut(); 
+    location.reload(); 
+}
+        
 _client.auth.onAuthStateChange((event, session) => {
     if (session) {
         document.getElementById('auth-section').classList.add('hidden');
