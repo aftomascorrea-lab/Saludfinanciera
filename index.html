@@ -264,21 +264,26 @@ async function cargarProximosPagos(cuentas, movimientos) {
     });
 }
 
-// --- 5. ACCIONES ---
+// --- FUNCIONES DE ACCIÓN ---
 async function eliminarMovimiento(id) {
     if(confirm('¿Borrar registro?')) {
         await _client.from('movimientos').delete().eq('id', id);
         cargarTodo();
     }
-} // <--- ESTA LLAVE CIERRA ELIMINAR. ES VITAL.
+}
 
-// --- 6. AUTH Y CIERRE ---
+// --- SISTEMA DE ENTRADA (AUTH) ---
 async function login() { 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const { error } = await _client.auth.signInWithPassword({ email, password });
+    const emailInput = document.getElementById('email').value;
+    const passInput = document.getElementById('password').value;
+    
+    const { error } = await _client.auth.signInWithPassword({ 
+        email: emailInput, 
+        password: passInput 
+    });
+    
     if(error) alert("Error: " + error.message);
-    // Si no hay error, el bloque de abajo (onAuthStateChange) hará el resto
+    // Si entra, el detector de abajo nos abrirá la app
 }
 
 async function logout() { 
@@ -286,12 +291,17 @@ async function logout() {
     location.reload(); 
 }
 
-// --- 7. INICIALIZACIÓN ---
+// --- DETECTOR DE SESIÓN EN TIEMPO REAL ---
 _client.auth.onAuthStateChange((event, session) => {
     if (session) {
+        // Usuario logueado: Mostramos App, ocultamos Login
         document.getElementById('auth-section').classList.add('hidden');
         document.getElementById('main-app').classList.remove('hidden');
         cargarTodo();
+    } else {
+        // Usuario fuera: Mostramos Login, ocultamos App
+        document.getElementById('auth-section').classList.remove('hidden');
+        document.getElementById('main-app').classList.add('hidden');
     }
 });
         </script>
