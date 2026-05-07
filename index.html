@@ -264,7 +264,7 @@ async function cargarProximosPagos(cuentas, movimientos) {
     });
 }
 
-// --- FUNCIONES DE ACCIÓN ---
+// --- 5. ACCIONES DE REGISTROS ---
 async function eliminarMovimiento(id) {
     if(confirm('¿Borrar registro?')) {
         await _client.from('movimientos').delete().eq('id', id);
@@ -272,18 +272,21 @@ async function eliminarMovimiento(id) {
     }
 }
 
-// --- SISTEMA DE ENTRADA (AUTH) ---
+// --- 6. SISTEMA DE ACCESO (LOGIN) ---
 async function login() { 
-    const emailInput = document.getElementById('email').value;
-    const passInput = document.getElementById('password').value;
+    const emailVal = document.getElementById('email').value;
+    const passVal = document.getElementById('password').value;
     
+    // Intentamos entrar
     const { error } = await _client.auth.signInWithPassword({ 
-        email: emailInput, 
-        password: passInput 
+        email: emailVal, 
+        password: passVal 
     });
     
-    if(error) alert("Error: " + error.message);
-    // Si entra, el detector de abajo nos abrirá la app
+    if(error) {
+        alert("Error: " + error.message);
+    }
+    // Si es exitoso, el detector de abajo abrirá la app automáticamente
 }
 
 async function logout() { 
@@ -291,15 +294,15 @@ async function logout() {
     location.reload(); 
 }
 
-// --- DETECTOR DE SESIÓN EN TIEMPO REAL ---
+// --- 7. DETECTOR DE SESIÓN (EL MOTOR DE LA PUERTA) ---
 _client.auth.onAuthStateChange((event, session) => {
     if (session) {
-        // Usuario logueado: Mostramos App, ocultamos Login
+        // Logueado: Mostramos App
         document.getElementById('auth-section').classList.add('hidden');
         document.getElementById('main-app').classList.remove('hidden');
         cargarTodo();
     } else {
-        // Usuario fuera: Mostramos Login, ocultamos App
+        // Fuera: Mostramos Login
         document.getElementById('auth-section').classList.remove('hidden');
         document.getElementById('main-app').classList.add('hidden');
     }
