@@ -267,8 +267,8 @@ async function crearCuenta() {
 }
         // --- 6. AUTH ---
         async function login() { 
-            const e = document.getElementById('email').value;
-            const p = document.getElementById('password').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
             const { error } = await _client.auth.signInWithPassword({ email: e, password: p });
             if(error) alert(error.message);
         }
