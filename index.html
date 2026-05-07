@@ -228,18 +228,23 @@ async function guardarMovimiento() {
 
 async function crearCategoria() {
     const { data: { user } } = await _client.auth.getUser();
-    const nombre = document.getElementById('cat-name').value;
-    
-    if (!nombre) return alert("Escribe el nombre de la categoría.");
+    if (!user) return alert("Sesión expirada");
 
+    // 1. Capturamos el nombre desde el input correcto
+    const nombreDeLaCategoria = document.getElementById('cat-name').value;
+    
+    if (!nombreDeLaCategoria) return alert("Escribe un nombre");
+
+    // 2. Insertamos en la tabla 'categorias' (con S)
     const { error } = await _client.from('categorias').insert([{ 
-        nombre: nombre, 
+        nombre: nombreDeLaCategoria, 
         user_id: user.id 
     }]);
 
-    if (error) alert("Error: " + error.message);
-    else {
-        alert("✅ Categoría creada");
+    if (error) {
+        alert("Error: " + error.message);
+    } else {
+        alert("✅ Categoría guardada");
         document.getElementById('cat-name').value = '';
         cargarTodo();
     }
