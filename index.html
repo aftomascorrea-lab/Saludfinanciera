@@ -33,71 +33,41 @@
         <header class="flex justify-between items-center mb-8">
             <div>
                 <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Patrimonio Neto</p>
-                <h1 id="patrimonio-neto" class="text-3xl font-black">$0</h1>
+                <h1 id="patrimonio-neto" class="text-3xl font-black text-emerald-400">$0</h1>
             </div>
             <button onclick="logout()" class="p-2 glass rounded-lg text-[10px] font-bold text-rose-400">SALIR</button>
         </header>
 
-        <section id="proximos-pagos" class="glass p-6 rounded-[2.5rem] space-y-4">
-    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider italic">Calendario de Pagos (Este Mes)</h3>
-    <div id="lista-pagos-tarjeta" class="space-y-3 text-sm">
-        </div>
-</section>
+        <main id="view-dashboard" class="view active space-y-6">
+            <section id="proximos-pagos" class="glass p-6 rounded-[2.5rem] space-y-4">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider italic">Calendario de Pagos</h3>
+                <div id="lista-pagos-tarjeta" class="space-y-3 text-sm"></div>
+            </section>
 
-<section class="glass p-6 rounded-[2.5rem] space-y-4">
-    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Nuevo Registro</h3>
-    <div class="space-y-3">
-        <input id="m-concepto" type="text" placeholder="Concepto (Ej: Compra Amazon)" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 outline-none text-sm">
-        
-        <div class="grid grid-cols-2 gap-3">
-            <input id="m-monto" type="number" placeholder="Monto Total $" class="p-4 rounded-xl bg-slate-900 border border-slate-700 outline-none text-sm font-bold">
-            <select id="m-tipo" class="p-4 rounded-xl bg-slate-900 border border-slate-700 font-bold text-sm">
-                <option value="gasto">🔴 Gasto</option>
-                <option value="ingreso">🟢 Ingreso</option>
-                <option value="inversion">🔵 Inversión</option>
-            </select>
-        </div>
-
-        <select id="m-cuenta" onchange="toggleMSI()" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 text-sm">
-            <option value="efectivo">💵 Efectivo / Cash</option>
-        </select>
-
-        <div id="bloque-msi" class="hidden animate-pulse">
-            <label class="text-[10px] font-bold text-cyan-400 ml-2">PLAN DE MESES SIN INTERESES</label>
-            <select id="m-msi" class="w-full p-4 rounded-xl bg-slate-800 border border-cyan-900 text-sm font-bold text-cyan-400">
-                <option value="1">Pago Único (Sin MSI)</option>
-                <option value="3">3 Meses</option>
-                <option value="6">6 Meses</option>
-                <option value="12">12 Meses</option>
-                <option value="18">18 Meses</option>
-            </select>
-        </div>
-
-        <select id="m-categoria" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 text-sm">
-            </select>
-        
-        <button onclick="guardarMovimiento()" class="w-full bg-emerald-500 p-4 rounded-2xl font-black uppercase text-sm shadow-lg">Registrar Movimiento</button>
-    </div>
-</section>
-
-<div class="glass p-5 rounded-2xl space-y-3">
-    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-tighter">Gestión de Líneas de Crédito</h3>
-    <div class="space-y-2">
-        <input id="acc-name" type="text" placeholder="Nombre de la Tarjeta" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-xs">
-        <div class="grid grid-cols-2 gap-2">
-            <input id="acc-limite" type="number" placeholder="Límite $" class="p-3 rounded-lg bg-slate-900 border border-slate-700 text-xs">
-            <select id="acc-type" class="p-3 rounded-lg bg-slate-900 border border-slate-700 text-xs">
-                <option value="credito">Tarjeta de Crédito</option>
-                <option value="debito">Débito / Nómina</option>
-            </select>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-            <input id="acc-corte" type="number" placeholder="Día Corte (1-31)" class="p-3 rounded-lg bg-slate-900 border border-slate-700 text-xs">
-            <input id="acc-pago" type="number" placeholder="Día Pago (1-31)" class="p-3 rounded-lg bg-slate-900 border border-slate-700 text-xs">
-        </div>
-        <button onclick="crearCuenta()" class="w-full bg-slate-700 p-2 rounded-lg text-[10px] font-bold uppercase">Añadir a Cartera</button>
-    </div>
-</div>
+            <section class="glass p-6 rounded-[2.5rem] space-y-4">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Nuevo Registro</h3>
+                <div class="space-y-3">
+                    <input id="m-concepto" type="text" placeholder="Concepto" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 outline-none text-sm">
+                    <div class="grid grid-cols-2 gap-3">
+                        <input id="m-monto" type="number" placeholder="Monto $" class="p-4 rounded-xl bg-slate-900 border border-slate-700 outline-none text-sm font-bold">
+                        <select id="m-tipo" class="p-4 rounded-xl bg-slate-900 border border-slate-700 font-bold text-sm">
+                            <option value="gasto">🔴 Gasto</option>
+                            <option value="ingreso">🟢 Ingreso</option>
+                            <option value="inversion">🔵 Inversión</option>
+                        </select>
+                    </div>
+                    <select id="m-cuenta" onchange="toggleMSI()" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 text-sm"></select>
+                    <div id="bloque-msi" class="hidden">
+                        <select id="m-msi" class="w-full p-4 rounded-xl bg-slate-800 border border-cyan-900 text-sm font-bold text-cyan-400 mt-2">
+                            <option value="1">Pago Único (Sin MSI)</option>
+                            <option value="3">3 Meses</option>
+                            <option value="6">6 Meses</option>
+                            <option value="12">12 Meses</option>
+                        </select>
+                    </div>
+                    <select id="m-categoria" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 text-sm"></select>
+                    <button onclick="guardarMovimiento()" class="w-full bg-emerald-500 p-4 rounded-2xl font-black uppercase text-sm">Registrar</button>
+                </div>
             </section>
         </main>
 
@@ -108,205 +78,173 @@
 
         <main id="view-config" class="view space-y-6">
             <h2 class="text-xl font-bold px-2">Configuración</h2>
-            
             <div class="glass p-5 rounded-2xl space-y-3">
-                <h3 class="text-xs font-bold text-slate-400 uppercase">Añadir Categoría</h3>
-                <div class="flex gap-2">
-                    <input id="cat-name" type="text" placeholder="Ej: Comida, Auto..." class="flex-1 p-3 rounded-lg bg-slate-900 border border-slate-700 text-sm">
-                    <button onclick="crearCategoria()" class="bg-emerald-500 px-4 rounded-lg font-bold">+</button>
-                </div>
-                <div id="lista-categorias" class="flex flex-wrap gap-2 pt-2"></div>
-            </div>
-
-            <div class="glass p-5 rounded-2xl space-y-3">
-                <h3 class="text-xs font-bold text-slate-400 uppercase">Tarjetas / Cuentas</h3>
-                <div class="space-y-2">
-                    <input id="acc-name" type="text" placeholder="Nombre Banco" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-xs">
-                    <select id="acc-type" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-xs font-bold">
+                <h3 class="text-xs font-bold text-slate-400 uppercase">Gestión de Cuentas</h3>
+                <input id="acc-name-config" type="text" placeholder="Nombre Tarjeta/Banco" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-xs">
+                <div class="grid grid-cols-2 gap-2">
+                    <select id="acc-type-config" class="p-3 rounded-lg bg-slate-900 border border-slate-700 text-xs">
                         <option value="debito">Débito</option>
                         <option value="credito">Crédito</option>
                     </select>
-                    <button onclick="crearCuenta()" class="w-full bg-slate-700 p-2 rounded-lg text-[10px] font-bold uppercase">Añadir Tarjeta</button>
+                    <input id="acc-pago-config" type="number" placeholder="Día Pago" class="p-3 rounded-lg bg-slate-900 border border-slate-700 text-xs">
                 </div>
+                <button onclick="crearCuenta()" class="w-full bg-slate-700 p-2 rounded-lg text-[10px] font-bold">AÑADIR CUENTA</button>
+            </div>
+
+            <div class="glass p-5 rounded-2xl space-y-3">
+                <h3 class="text-xs font-bold text-slate-400 uppercase">Categorías</h3>
+                <div class="flex gap-2">
+                    <input id="cat-name-config" type="text" placeholder="Nueva Categoría" class="flex-1 p-3 rounded-lg bg-slate-900 border border-slate-700 text-xs">
+                    <button onclick="crearCategoria()" class="bg-emerald-500 px-4 rounded-lg font-bold">+</button>
+                </div>
+                <div id="lista-categorias" class="flex flex-wrap gap-2 pt-2"></div>
             </div>
         </main>
 
         <nav class="fixed bottom-0 left-0 right-0 glass border-t border-white/10 px-6 py-4 flex justify-between items-center max-w-md mx-auto rounded-t-[2rem] z-50">
             <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active flex flex-col items-center">
-                <span class="text-lg text-emerald-400">🏠</span>
-                <span class="text-[9px] font-bold uppercase">Home</span>
+                <span>🏠</span><span class="text-[9px] font-bold">HOME</span>
             </button>
             <button onclick="switchView('movimientos')" id="nav-movimientos" class="nav-btn flex flex-col items-center">
-                <span class="text-lg">📜</span>
-                <span class="text-[9px] font-bold uppercase">Historial</span>
+                <span>📜</span><span class="text-[9px] font-bold">HISTORIAL</span>
             </button>
             <button onclick="switchView('config')" id="nav-config" class="nav-btn flex flex-col items-center">
-                <span class="text-lg text-slate-400">⚙️</span>
-                <span class="text-[9px] font-bold uppercase">Ajustes</span>
+                <span>⚙️</span><span class="text-[9px] font-bold">AJUSTES</span>
             </button>
         </nav>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-// --- 1. CONFIGURACIÓN ---
-const SUPABASE_URL = 'https://pibmwghhrnavyzjunkly.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_SlpV8t9zWObDOW6IpVIuDQ_DR3IhD9v';
-const _client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // --- 1. CONFIGURACIÓN ---
+        const SUPABASE_URL = 'https://pibnwghhrnavyzjunkly.supabase.co'; // Corregido
+        const SUPABASE_KEY = 'sb_publishable_SlpV8t9zWObDOW6IpVIuDQ_DR3IhD9v';
+        const _client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// --- 2. NAVEGACIÓN ---
-function switchView(viewId) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('view-' + viewId).classList.add('active');
-    document.getElementById('nav-' + viewId).classList.add('active');
-}
-
-// --- 3. LÓGICA DE MSI ---
-async function toggleMSI() {
-    const cuentaId = document.getElementById('m-cuenta').value;
-    const bloque = document.getElementById('bloque-msi');
-    if (cuentaId === 'efectivo') { 
-        bloque.classList.add('hidden'); 
-        return; 
-    }
-
-    const { data: cuenta } = await _client.from('cuentas').select('tipo').eq('id', cuentaId).single();
-    if (cuenta?.tipo === 'credito') bloque.classList.remove('hidden');
-    else bloque.classList.add('hidden');
-}
-
-// --- 4. MOTOR DE DATOS ---
-async function cargarTodo() {
-    const { data: { user } } = await _client.auth.getUser();
-    if (!user) return;
-
-    // A. Cargar Cuentas y Categorías
-    const { data: accs } = await _client.from('cuentas').select('*');
-    const { data: cats } = await _client.from('categorias').select('*');
-    
-    const selectC = document.getElementById('m-cuenta');
-    selectC.innerHTML = '<option value="efectivo">💵 Efectivo / Cash</option>';
-    accs?.forEach(c => {
-        selectC.innerHTML += `<option value="${c.id}">${c.tipo === 'credito' ? '💳' : '🏦'} ${c.nombre_institucion}</option>`;
-    });
-
-    const selectCat = document.getElementById('m-categoria');
-    const listaCat = document.getElementById('lista-categorias');
-    selectCat.innerHTML = '<option value="general">📁 Categoría: General</option>';
-    listaCat.innerHTML = '';
-    cats?.forEach(cat => {
-        selectCat.innerHTML += `<option value="${cat.nombre}">${cat.nombre}</option>`;
-        listaCat.innerHTML += `<span class="px-3 py-1 bg-slate-800 rounded-full text-[10px] border border-slate-700">${cat.nombre}</span>`;
-    });
-
-    // B. Cargar Movimientos
-    const { data: movs } = await _client.from('movimientos').select('*').order('created_at', { ascending: false });
-    let ti = 0, tg = 0, td = 0, tinv = 0;
-    const listaM = document.getElementById('lista-movimientos');
-    listaM.innerHTML = '';
-
-    movs?.forEach(m => {
-        const cuotaMes = (m.msi_cuotas > 1) ? (m.monto / m.msi_cuotas) : m.monto;
-        const val = parseFloat(cuotaMes);
-
-        if (m.tipo === 'ingreso') ti += parseFloat(m.monto);
-        else if (m.tipo === 'gasto') tg += val;
-        else if (m.tipo === 'deuda') td += val;
-        else if (m.tipo === 'inversion') tinv += val;
-
-        listaM.innerHTML += `
-            <div class="flex justify-between items-center glass p-4 rounded-2xl border-l-4 ${m.tipo === 'ingreso' ? 'border-emerald-500' : 'border-rose-500'} mb-2">
-                <div>
-                    <p class="text-sm font-bold">${m.concepto} ${m.msi_cuotas > 1 ? '<span class="text-cyan-400 text-[10px]">[MSI]</span>' : ''}</p>
-                    <p class="text-[10px] text-slate-500 uppercase">${m.categoria || 'General'} • ${m.tipo}</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-sm font-black ${m.tipo === 'ingreso' ? 'text-emerald-400' : 'text-rose-400'}">
-                        ${m.tipo === 'ingreso' ? '+' : '-'}$${val.toFixed(2)}
-                    </p>
-                    <button onclick="eliminarMovimiento('${m.id}')" class="text-[9px] text-slate-600 font-bold hover:text-rose-500">Borrar</button>
-                </div>
-            </div>`;
-    });
-
-    // C. Actualizar Dashboard
-    const max = Math.max(ti, tg, td, tinv) || 1;
-    document.getElementById('bar-ingreso').style.width = (ti/max*10) + '%'; // Ajuste visual
-    document.getElementById('bar-gasto').style.width = (tg/max*100) + '%';
-    document.getElementById('bar-inversion').style.width = (tinv/max*100) + '%';
-    document.getElementById('bar-deuda').style.width = (td/max*100) + '%';
-
-    document.getElementById('val-ingreso').innerText = `$${ti.toLocaleString()}`;
-    document.getElementById('val-gasto').innerText = `$${tg.toLocaleString()}`;
-    document.getElementById('val-inversion').innerText = `$${tinv.toLocaleString()}`;
-    document.getElementById('val-deuda').innerText = `$${td.toLocaleString()}`;
-    document.getElementById('patrimonio-neto').innerText = `$${(ti + tinv - tg - td).toLocaleString()}`;
-
-    cargarProximosPagos(accs, movs);
-}
-
-async function cargarProximosPagos(cuentas, movimientos) {
-    const contenedor = document.getElementById('lista-pagos-tarjeta');
-    if (!contenedor) return;
-    contenedor.innerHTML = '';
-    cuentas?.filter(c => c.tipo === 'credito').forEach(cta => {
-        const deudasCta = movimientos?.filter(m => m.cuenta_id === cta.id) || [];
-        let totalMes = 0;
-        deudasCta.forEach(d => { totalMes += (d.monto / (d.msi_cuotas || 1)); });
-        if (totalMes > 0) {
-            contenedor.innerHTML += `
-                <div class="flex justify-between items-center bg-slate-900/50 p-3 rounded-xl border border-slate-800">
-                    <p class="font-bold text-xs">${cta.nombre_institucion} (Día ${cta.fecha_pago || '?'})</p>
-                    <p class="text-rose-400 font-black text-sm">$${totalMes.toFixed(2)}</p>
-                </div>`;
+        // --- 2. NAVEGACIÓN ---
+        function switchView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('view-' + viewId).classList.add('active');
+            document.getElementById('nav-' + viewId).classList.add('active');
         }
-    });
-}
 
-// --- 5. ACCIONES DE REGISTROS ---
-async function eliminarMovimiento(id) {
-    if(confirm('¿Borrar registro?')) {
-        await _client.from('movimientos').delete().eq('id', id);
-        cargarTodo();
-    }
-}
+        // --- 3. LÓGICA MSI ---
+        async function toggleMSI() {
+            const cuentaId = document.getElementById('m-cuenta').value;
+            const bloque = document.getElementById('bloque-msi');
+            if (cuentaId === 'efectivo') { bloque.classList.add('hidden'); return; }
+            const { data: cta } = await _client.from('cuentas').select('tipo').eq('id', cuentaId).single();
+            cta?.tipo === 'credito' ? bloque.classList.remove('hidden') : bloque.classList.add('hidden');
+        }
 
-// --- 6. SISTEMA DE ACCESO (LOGIN) ---
-async function login() { 
-    const emailVal = document.getElementById('email').value;
-    const passVal = document.getElementById('password').value;
-    
-    // Intentamos entrar
-    const { error } = await _client.auth.signInWithPassword({ 
-        email: emailVal, 
-        password: passVal 
-    });
-    
-    if(error) {
-        alert("Error: " + error.message);
-    }
-    // Si es exitoso, el detector de abajo abrirá la app automáticamente
-}
+        // --- 4. MOTOR DE DATOS ---
+        async function cargarTodo() {
+            const { data: { user } } = await _client.auth.getUser();
+            if (!user) return;
 
-async function logout() { 
-    await _client.auth.signOut(); 
-    location.reload(); 
-}
+            const { data: accs } = await _client.from('cuentas').select('*');
+            const { data: cats } = await _client.from('categorias').select('*');
+            const { data: movs } = await _client.from('movimientos').select('*').order('created_at', { ascending: false });
 
-// --- 7. DETECTOR DE SESIÓN (EL MOTOR DE LA PUERTA) ---
-_client.auth.onAuthStateChange((event, session) => {
-    if (session) {
-        // Logueado: Mostramos App
-        document.getElementById('auth-section').classList.add('hidden');
-        document.getElementById('main-app').classList.remove('hidden');
-        cargarTodo();
-    } else {
-        // Fuera: Mostramos Login
-        document.getElementById('auth-section').classList.remove('hidden');
-        document.getElementById('main-app').classList.add('hidden');
-    }
-});
-        </script>
+            // Rellenar Selects
+            const sCuenta = document.getElementById('m-cuenta');
+            sCuenta.innerHTML = '<option value="efectivo">💵 Efectivo / Cash</option>';
+            accs?.forEach(c => sCuenta.innerHTML += `<option value="${c.id}">${c.tipo === 'credito'?'💳':'🏦'} ${c.nombre_institucion}</option>`);
+
+            const sCat = document.getElementById('m-categoria');
+            const lCat = document.getElementById('lista-categorias');
+            sCat.innerHTML = '<option value="general">📁 General</option>';
+            lCat.innerHTML = '';
+            cats?.forEach(c => {
+                sCat.innerHTML += `<option value="${c.nombre}">${c.nombre}</option>`;
+                lCat.innerHTML += `<span class="px-2 py-1 bg-slate-800 rounded-full text-[9px]">${c.nombre}</span>`;
+            });
+
+            // Procesar Movimientos y Dashboard
+            let ti=0, tg=0, td=0, tinv=0;
+            const lMov = document.getElementById('lista-movimientos');
+            lMov.innerHTML = '';
+            movs?.forEach(m => {
+                const cuota = m.msi_cuotas > 1 ? (m.monto/m.msi_cuotas) : m.monto;
+                if(m.tipo==='ingreso') ti += m.monto;
+                else if(m.tipo==='gasto') tg += cuota;
+                else if(m.tipo==='deuda') td += cuota;
+                else if(m.tipo==='inversion') tinv += cuota;
+
+                lMov.innerHTML += `<div class="glass p-4 rounded-2xl flex justify-between border-l-4 ${m.tipo==='ingreso'?'border-emerald-500':'border-rose-500'}">
+                    <div><p class="text-sm font-bold">${m.concepto}</p><p class="text-[9px] text-slate-500">${m.categoria}</p></div>
+                    <div class="text-right"><p class="text-sm font-black">$${cuota.toFixed(2)}</p>
+                    <button onclick="eliminarMovimiento('${m.id}')" class="text-[8px] text-slate-600 hover:text-rose-500">BORRAR</button></div>
+                </div>`;
+            });
+
+            document.getElementById('patrimonio-neto').innerText = `$${(ti + tinv - tg - td).toLocaleString()}`;
+            
+            // Calendario Pagos
+            const lPagos = document.getElementById('lista-pagos-tarjeta');
+            lPagos.innerHTML = '';
+            accs?.filter(a => a.tipo === 'credito').forEach(cta => {
+                const total = movs?.filter(m => m.cuenta_id === cta.id).reduce((s, m) => s + (m.monto/(m.msi_cuotas||1)), 0);
+                if(total > 0) lPagos.innerHTML += `<div class="flex justify-between bg-slate-900/50 p-3 rounded-xl">
+                    <p class="font-bold text-xs">${cta.nombre_institucion} (Día ${cta.fecha_pago})</p>
+                    <p class="text-rose-400 font-black">$${total.toFixed(2)}</p></div>`;
+            });
+        }
+
+        // --- 5. ACCIONES ---
+        async function guardarMovimiento() {
+            const { data: { user } } = await _client.auth.getUser();
+            const msi = parseInt(document.getElementById('m-msi').value) || 1;
+            await _client.from('movimientos').insert([{
+                concepto: document.getElementById('m-concepto').value,
+                monto: parseFloat(document.getElementById('m-monto').value),
+                tipo: document.getElementById('m-tipo').value,
+                cuenta_id: document.getElementById('m-cuenta').value === 'efectivo' ? null : document.getElementById('m-cuenta').value,
+                categoria: document.getElementById('m-categoria').value,
+                msi_cuotas: msi,
+                user_id: user.id
+            }]);
+            cargarTodo();
+        }
+
+        async function crearCuenta() {
+            const { data: { user } } = await _client.auth.getUser();
+            await _client.from('cuentas').insert([{
+                nombre_institucion: document.getElementById('acc-name-config').value,
+                tipo: document.getElementById('acc-type-config').value,
+                fecha_pago: document.getElementById('acc-pago-config').value,
+                user_id: user.id
+            }]);
+            cargarTodo();
+        }
+
+        async function crearCategoria() {
+            const { data: { user } } = await _client.auth.getUser();
+            await _client.from('categorias').insert([{ nombre: document.getElementById('cat-name-config').value, user_id: user.id }]);
+            cargarTodo();
+        }
+
+        async function eliminarMovimiento(id) { if(confirm('¿Borrar?')){ await _client.from('movimientos').delete().eq('id', id); cargarTodo(); } }
+
+        // --- 6. AUTH ---
+        async function login() { 
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('password').value;
+            const { error } = await _client.auth.signInWithPassword({ email: e, password: p });
+            if(error) alert(error.message);
+        }
+        async function logout() { await _client.auth.signOut(); location.reload(); }
+
+        _client.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                document.getElementById('auth-section').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                cargarTodo();
+            } else {
+                document.getElementById('auth-section').classList.remove('hidden');
+                document.getElementById('main-app').classList.add('hidden');
+            }
+        });
+    </script>
 </body>
-</html>
+</html>    
