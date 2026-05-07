@@ -192,20 +192,46 @@
         }
 
         // --- 5. ACCIONES ---
-        async function guardarMovimiento() {
-            const { data: { user } } = await _client.auth.getUser();
-            const msi = parseInt(document.getElementById('m-msi').value) || 1;
-            await _client.from('movimientos').insert([{
-                concepto: document.getElementById('m-concepto').value,
-                monto: parseFloat(document.getElementById('m-monto').value),
-                tipo: document.getElementById('m-tipo').value,
-                cuenta_id: document.getElementById('m-cuenta').value === 'efectivo' ? null : document.getElementById('m-cuenta').value,
-                categoria: document.getElementById('m-categoria').value,
-                msi_cuotas: msi,
-                user_id: user.id
-            }]);
-            cargarTodo();
-        }
+      async function guardarMovimiento() {
+    const { data: { user } } = await _client.auth.getUser();
+    if (!user) return alert("Sesión expirada");
+
+    // Captura de datos del formulario
+    const concepto = document.getElementById('m-concepto').value;
+    const monto = parseFloat(document.getElementById('m-monto').value);
+    const tipo = document.getElementById('m-tipo').value;
+    const cuenta = document.getElementById('m-cuenta').value;
+    const categoria = document.getElementById('m-categoria').value;
+    const msi = parseInt(document.getElementById('m-msi')?.value) || 1;
+
+    // Validación básica: que no vaya vacío
+    if (!concepto || !monto) return alert("Llena concepto y monto");
+
+    const payload = {
+        user_id: user.id,
+        concepto: concepto,
+        monto: monto,
+        tipo: tipo,
+        cuenta_id: cuenta === 'efectivo' ? null : cuenta,
+        categoria: categoria,
+        msi_cuotas: msi,
+        msi_restantes: msi,
+        metodo_pago: cuenta === 'efectivo' ? 'Efectivo' : 'Tarjeta'
+    };
+
+    const { error } = await _client.from('movimientos').insert([payload]);
+
+    if (error) {
+        console.error(error);
+        alert("Error al guardar: " + error.message);
+    } else {
+        // Limpiar campos y refrescar
+        document.getElementById('m-concepto').value = '';
+        document.getElementById('m-monto').value = '';
+        alert("✅ ¡Registro guardado!");
+        cargarTodo(); // Esta función actualiza tus gráficas y lista
+    }
+}
 
         async function crearCuenta() {
             const { data: { user } } = await _client.auth.getUser();
