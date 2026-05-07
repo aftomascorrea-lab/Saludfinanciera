@@ -265,76 +265,27 @@ async function cargarProximosPagos(cuentas, movimientos) {
 }
 
 // --- 5. ACCIONES ---
-async function guardarMovimiento() {
-    const { data: { user } } = await _client.auth.getUser();
-    if (!user) return;
-    const msi = parseInt(document.getElementById('m-msi')?.value) || 1;
-    const payload = {
-        user_id: user.id,
-        concepto: document.getElementById('m-concepto').value,
-        monto: parseFloat(document.getElementById('m-monto').value),
-        tipo: document.getElementById('m-tipo').value,
-        cuenta_id: document.getElementById('m-cuenta').value === 'efectivo' ? null : document.getElementById('m-cuenta').value,
-        categoria: document.getElementById('m-categoria').value,
-        msi_cuotas: msi,
-        msi_restantes: msi
-    };
-    const { error } = await _client.from('movimientos').insert([payload]);
-    if (error) alert("Error: " + error.message);
-    else {
-        document.getElementById('m-concepto').value = '';
-        document.getElementById('m-monto').value = '';
-        cargarTodo();
-    }
-}
-
-async function crearCategoria() {
-    const { data: { user } } = await _client.auth.getUser();
-    await _client.from('categorias').insert([{ nombre: document.getElementById('cat-name').value, user_id: user.id }]);
-    document.getElementById('cat-name').value = '';
-    cargarTodo();
-}
-
-async function crearCuenta() {
-    const { data: { user } } = await _client.auth.getUser();
-    await _client.from('cuentas').insert([{ 
-        nombre_institucion: document.getElementById('acc-name').value, 
-        tipo: document.getElementById('acc-type').value,
-        limite_credito: document.getElementById('acc-limite').value,
-        fecha_corte: document.getElementById('acc-corte').value,
-        fecha_pago: document.getElementById('acc-pago').value,
-        user_id: user.id 
-    }]);
-    cargarTodo();
-}
-
 async function eliminarMovimiento(id) {
-    if (confirm('¿Eliminar este registro?')) {
-        await _client.from('movimientos').delete().eq('id', id);
-        cargarTodo();
+    if(confirm('¿Borrar?')) { 
+        await _client.from('movimientos').delete().eq('id', id); 
+        cargarTodo(); 
     }
 }
 
 // --- 6. AUTH Y CIERRE ---
 async function login() { 
-    // Capturamos lo que escribiste en los cuadritos de texto
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    
-    // Intentamos entrar a Supabase
     const { error } = await _client.auth.signInWithPassword({ email, password });
-    
-    if (error) {
-        alert("Credenciales incorrectas: " + error.message);
-    }
-    // Si no hay error, el "onAuthStateChange" de abajo te dejará pasar solito
+    if(error) alert("Error: " + error.message);
 }
 
 async function logout() { 
     await _client.auth.signOut(); 
     location.reload(); 
 }
-        
+
+// --- 7. INICIALIZACIÓN ---
 _client.auth.onAuthStateChange((event, session) => {
     if (session) {
         document.getElementById('auth-section').classList.add('hidden');
