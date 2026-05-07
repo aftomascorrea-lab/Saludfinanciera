@@ -191,12 +191,12 @@
             });
         }
 
-        // --- 5. ACCIONES ---
-      async function guardarMovimiento() {
-    const { data: { user } } = await _client.auth.getUser();
-    if (!user) return alert("Sesión expirada");
+// --- 5. ACCIONES REFORZADAS ---
 
-    // Captura de datos del formulario
+async function guardarMovimiento() {
+    const { data: { user } } = await _client.auth.getUser();
+    if (!user) return alert("Debes estar logueado para registrar datos.");
+
     const concepto = document.getElementById('m-concepto').value;
     const monto = parseFloat(document.getElementById('m-monto').value);
     const tipo = document.getElementById('m-tipo').value;
@@ -204,10 +204,9 @@
     const categoria = document.getElementById('m-categoria').value;
     const msi = parseInt(document.getElementById('m-msi')?.value) || 1;
 
-    // Validación básica: que no vaya vacío
-    if (!concepto || !monto) return alert("Llena concepto y monto");
+    if (!concepto || isNaN(monto)) return alert("Escribe un concepto y un monto válido.");
 
-    const payload = {
+    const { error } = await _client.from('movimientos').insert([{
         user_id: user.id,
         concepto: concepto,
         monto: monto,
@@ -215,43 +214,57 @@
         cuenta_id: cuenta === 'efectivo' ? null : cuenta,
         categoria: categoria,
         msi_cuotas: msi,
-        msi_restantes: msi,
-        metodo_pago: cuenta === 'efectivo' ? 'Efectivo' : 'Tarjeta'
-    };
+        msi_restantes: msi
+    }]);
 
-    const { error } = await _client.from('movimientos').insert([payload]);
-
-    if (error) {
-        console.error(error);
-        alert("Error al guardar: " + error.message);
-    } else {
-        // Limpiar campos y refrescar
+    if (error) alert("Error al guardar: " + error.message);
+    else {
+        alert("✅ Movimiento registrado");
         document.getElementById('m-concepto').value = '';
         document.getElementById('m-monto').value = '';
-        alert("✅ ¡Registro guardado!");
-        cargarTodo(); // Esta función actualiza tus gráficas y lista
+        cargarTodo();
     }
 }
 
-        async function crearCuenta() {
-            const { data: { user } } = await _client.auth.getUser();
-            await _client.from('cuentas').insert([{
-                nombre_institucion: document.getElementById('acc-name-config').value,
-                tipo: document.getElementById('acc-type-config').value,
-                fecha_pago: document.getElementById('acc-pago-config').value,
-                user_id: user.id
-            }]);
-            cargarTodo();
-        }
+async function crearCategoria() {
+    const { data: { user } } = await _client.auth.getUser();
+    const nombre = document.getElementById('cat-name').value;
+    
+    if (!nombre) return alert("Escribe el nombre de la categoría.");
 
-        async function crearCategoria() {
-            const { data: { user } } = await _client.auth.getUser();
-            await _client.from('categorias').insert([{ nombre: document.getElementById('cat-name-config').value, user_id: user.id }]);
-            cargarTodo();
-        }
+    const { error } = await _client.from('categorias').insert([{ 
+        nombre: nombre, 
+        user_id: user.id 
+    }]);
 
-        async function eliminarMovimiento(id) { if(confirm('¿Borrar?')){ await _client.from('movimientos').delete().eq('id', id); cargarTodo(); } }
+    if (error) alert("Error: " + error.message);
+    else {
+        alert("✅ Categoría creada");
+        document.getElementById('cat-name').value = '';
+        cargarTodo();
+    }
+}
 
+async function crearCuenta() {
+    const { data: { user } } = await _client.auth.getUser();
+    const nombre = document.getElementById('acc-name').value;
+    const tipo = document.getElementById('acc-type').value;
+
+    if (!nombre) return alert("Escribe el nombre de la institución.");
+
+    const { error } = await _client.from('cuentas').insert([{ 
+        nombre_institucion: nombre, 
+        tipo: tipo,
+        user_id: user.id 
+    }]);
+
+    if (error) alert("Error: " + error.message);
+    else {
+        alert("✅ Cuenta creada");
+        document.getElementById('acc-name').value = '';
+        cargarTodo();
+    }
+}
         // --- 6. AUTH ---
         async function login() { 
             const e = document.getElementById('email').value;
