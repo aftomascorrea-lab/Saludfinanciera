@@ -266,11 +266,11 @@ async function cargarProximosPagos(cuentas, movimientos) {
 
 // --- 5. ACCIONES ---
 async function eliminarMovimiento(id) {
-    if(confirm('¿Borrar?')) { 
-        await _client.from('movimientos').delete().eq('id', id); 
-        cargarTodo(); 
+    if(confirm('¿Borrar registro?')) {
+        await _client.from('movimientos').delete().eq('id', id);
+        cargarTodo();
     }
-}
+} // <--- ESTA LLAVE CIERRA ELIMINAR. ES VITAL.
 
 // --- 6. AUTH Y CIERRE ---
 async function login() { 
@@ -278,6 +278,7 @@ async function login() {
     const password = document.getElementById('password').value;
     const { error } = await _client.auth.signInWithPassword({ email, password });
     if(error) alert("Error: " + error.message);
+    // Si no hay error, el bloque de abajo (onAuthStateChange) hará el resto
 }
 
 async function logout() { 
