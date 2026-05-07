@@ -2,50 +2,70 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinanzasPro Cloud - Seguro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FinanzasPro - Correa Asesoría</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .gradient-text { background: linear-gradient(90deg, #4ade80, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-primary { background: linear-gradient(135deg, #10b981 0%, #059669 100%); transition: transform 0.2s; }
+        .btn-primary:active { transform: scale(0.95); }
+    </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen">
+<body class="text-slate-200">
 
-    <div id="auth-section" class="max-w-md mx-auto pt-20 px-4">
-        <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 shadow-2xl text-center">
-            <h1 class="text-3xl font-black text-green-400 mb-6">FinanzasPro</h1>
-            <p class="text-slate-400 mb-8 text-sm">Ingresa para gestionar tu patrimonio de forma privada.</p>
-            <input id="email" type="email" placeholder="Tu correo" class="w-full p-4 rounded-xl bg-slate-900 mb-3 border-none focus:ring-2 focus:ring-green-500">
-            <input id="password" type="password" placeholder="Tu contraseña" class="w-full p-4 rounded-xl bg-slate-900 mb-6 border-none focus:ring-2 focus:ring-green-500">
-            <div class="grid grid-cols-2 gap-4">
-                <button onclick="login()" class="bg-green-600 p-4 rounded-xl font-bold">Entrar</button>
-                <button onclick="registro()" class="bg-slate-700 p-4 rounded-xl font-bold">Registrar</button>
+    <div id="auth-section" class="min-h-screen flex items-center justify-center p-6">
+        <div class="glass w-full max-w-md p-8 rounded-[2.5rem] shadow-2xl">
+            <div class="text-center mb-10">
+                <h1 class="text-4xl font-extrabold gradient-text tracking-tight">FinanzasPro</h1>
+                <p class="text-slate-400 mt-2 font-medium">Correa Asesoría Patrimonial</p>
+            </div>
+            <div class="space-y-4">
+                <input id="email" type="email" placeholder="Correo electrónico" class="w-full p-4 rounded-2xl bg-slate-900/50 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <input id="password" type="password" placeholder="Contraseña" class="w-full p-4 rounded-2xl bg-slate-900/50 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <button onclick="login()" class="w-full btn-primary p-4 rounded-2xl font-bold text-white shadow-lg shadow-emerald-900/20">Iniciar Sesión</button>
+                <button onclick="registro()" class="w-full text-slate-400 py-2 text-sm font-medium hover:text-white transition">Crear cuenta nueva</button>
             </div>
         </div>
     </div>
 
-    <div id="main-app" class="hidden">
-        <div class="bg-slate-800 p-6 shadow-xl sticky top-0 z-10 border-b border-slate-700 flex justify-between items-center">
-            <div>
-                <h1 id="balance" class="text-3xl font-black text-green-400">$0.00</h1>
-                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Patrimonio Neto</p>
+    <div id="main-app" class="hidden pb-20">
+        <header class="p-8 pt-12 text-center bg-slate-900/50">
+            <p class="text-slate-400 text-sm font-semibold uppercase tracking-widest mb-1">Patrimonio Neto</p>
+            <h1 id="balance" class="text-5xl font-extrabold mb-6 tracking-tighter">$0.00</h1>
+            <div class="flex justify-center gap-4">
+                <button onclick="logout()" class="text-xs bg-slate-800 px-4 py-2 rounded-full border border-slate-700 text-slate-400">Cerrar Sesión</button>
             </div>
-            <button onclick="logout()" class="text-xs bg-slate-700 px-3 py-2 rounded-lg text-slate-300">Salir</button>
-        </div>
+        </header>
 
-        <div class="max-w-md mx-auto p-4 space-y-6">
-            <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700">
-                <div class="grid grid-cols-2 gap-3 mb-4">
-                    <input id="desc" type="text" placeholder="Concepto" class="col-span-2 p-3 rounded-xl bg-slate-900 border-none">
-                    <input id="val" type="number" placeholder="Monto $" class="p-3 rounded-xl bg-slate-900 border-none">
-                    <select id="tipo" class="p-3 rounded-xl bg-slate-900 border-none">
-                        <option value="ingreso">🟢 Ingreso</option>
-                        <option value="gasto">🔴 Gasto</option>
-                        <option value="inversion">🔵 Inversión</option>
-                        <option value="deuda">⚪ Deuda</option>
-                    </select>
+        <div class="max-w-md mx-auto px-6 -mt-4 space-y-8">
+            <section class="glass p-6 rounded-[2rem] shadow-xl">
+                <h3 class="text-sm font-bold text-slate-400 mb-4 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full"></span> Nuevo Movimiento
+                </h3>
+                <div class="space-y-3">
+                    <input id="desc" type="text" placeholder="Concepto (Ej: Seguro Auto)" class="w-full p-4 rounded-xl bg-slate-900/80 border border-slate-700 focus:outline-none">
+                    <div class="grid grid-cols-2 gap-3">
+                        <input id="val" type="number" placeholder="Monto $" class="p-4 rounded-xl bg-slate-900/80 border border-slate-700 focus:outline-none">
+                        <select id="tipo" class="p-4 rounded-xl bg-slate-900/80 border border-slate-700 focus:outline-none font-bold text-emerald-400">
+                            <option value="ingreso">🟢 Ingreso</option>
+                            <option value="gasto">🔴 Gasto</option>
+                            <option value="inversion">🔵 Inversión</option>
+                            <option value="deuda">⚪ Deuda</option>
+                        </select>
+                    </div>
+                    <button onclick="guardar()" class="w-full btn-primary p-4 rounded-2xl font-black text-white uppercase tracking-widest text-sm">Registrar Movimiento</button>
                 </div>
-                <button onclick="guardar()" class="w-full bg-green-600 p-4 rounded-xl font-black">REGISTRAR</button>
-            </div>
-            <div id="lista" class="space-y-3"></div>
+            </section>
+
+            <section>
+                <h3 class="text-sm font-bold text-slate-400 mb-4 px-2 uppercase tracking-widest">Historial Reciente</h3>
+                <div id="lista" class="space-y-4">
+                    </div>
+            </section>
         </div>
     </div>
 
@@ -54,21 +74,21 @@
         const SUPABASE_KEY = 'sb_publishable_SlpV8t9zWObDOW6IpVIuDQ_DR3IhD9v';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // LÓGICA DE AUTENTICACIÓN
-        async function registro() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const { error } = await _supabase.auth.signUp({ email, password });
-            if (error) alert(error.message);
-            else alert('¡Revisa tu correo para confirmar tu cuenta!');
-        }
-
+        // --- LÓGICA DE USUARIO ---
         async function login() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const { error } = await _supabase.auth.signInWithPassword({ email, password });
-            if (error) alert(error.message);
+            if (error) alert("Error: " + error.message);
             else checkUser();
+        }
+
+        async function registro() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const { error } = await _supabase.auth.signUp({ email, password });
+            if (error) alert("Error: " + error.message);
+            else alert("¡Registro exitoso! Ya puedes iniciar sesión.");
         }
 
         async function logout() {
@@ -88,7 +108,7 @@
             }
         }
 
-        // LÓGICA DE DATOS (Mantenemos la anterior pero filtrada por usuario)
+        // --- LÓGICA DE DATOS ---
         async function mostrar() {
             const { data, error } = await _supabase.from('movimientos').select('*').order('created_at', { ascending: false });
             if (data) {
@@ -97,15 +117,23 @@
                 lista.innerHTML = data.map(d => {
                     const esPositivo = d.tipo === 'ingreso' || d.tipo === 'inversion';
                     total += esPositivo ? parseFloat(d.monto) : -parseFloat(d.monto);
+                    
+                    const colores = {
+                        ingreso: 'text-emerald-400',
+                        gasto: 'text-rose-400',
+                        inversion: 'text-cyan-400',
+                        deuda: 'text-slate-400'
+                    };
+
                     return `
-                        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex justify-between items-center">
-                            <div class="flex items-center gap-3">
-                                <div class="w-1 h-6 ${esPositivo ? 'bg-green-500' : 'bg-red-500'}"></div>
-                                <div><p class="font-bold">${d.concepto}</p><p class="text-[9px] uppercase">${d.tipo}</p></div>
+                        <div class="glass p-5 rounded-[1.5rem] flex justify-between items-center border-l-4 ${esPositivo ? 'border-l-emerald-500' : 'border-l-rose-500'}">
+                            <div>
+                                <p class="font-bold text-slate-100">${d.concepto}</p>
+                                <p class="text-[10px] uppercase font-bold tracking-widest text-slate-500">${d.tipo}</p>
                             </div>
                             <div class="text-right">
-                                <p class="${esPositivo ? 'text-green-400' : 'text-red-400'} font-black">$${d.monto}</p>
-                                <button onclick="eliminar(${d.id})" class="text-[9px] text-slate-500">BORRAR</button>
+                                <p class="text-lg font-extrabold ${colores[d.tipo]}">${esPositivo ? '+' : '-'}$${parseFloat(d.monto).toLocaleString()}</p>
+                                <button onclick="eliminar(${d.id})" class="text-[10px] text-slate-600 font-bold hover:text-rose-400 uppercase">Eliminar</button>
                             </div>
                         </div>`;
                 }).join('');
@@ -117,16 +145,29 @@
             const concepto = document.getElementById('desc').value;
             const monto = document.getElementById('val').value;
             const tipo = document.getElementById('tipo').value;
+            if(!concepto || !monto) return alert("Llena todos los campos");
+
             const { data: { user } } = await _supabase.auth.getUser();
-            
-            const { error } = await _supabase.from('movimientos').insert([{ concepto, monto: parseFloat(monto), tipo, user_id: user.id }]);
+            const { error } = await _supabase.from('movimientos').insert([{ 
+                concepto, 
+                monto: parseFloat(monto), 
+                tipo, 
+                user_id: user.id 
+            }]);
+
             if (error) alert(error.message);
-            else { mostrar(); document.getElementById('desc').value = ''; document.getElementById('val').value = ''; }
+            else { 
+                document.getElementById('desc').value = ''; 
+                document.getElementById('val').value = '';
+                mostrar(); 
+            }
         }
 
         async function eliminar(id) {
-            await _supabase.from('movimientos').delete().eq('id', id);
-            mostrar();
+            if(confirm("¿Seguro que quieres borrar este registro?")) {
+                await _supabase.from('movimientos').delete().eq('id', id);
+                mostrar();
+            }
         }
 
         checkUser();
