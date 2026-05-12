@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: #f1f5f9; overflow-x: hidden; }
         .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
         .gradient-text { background: linear-gradient(90deg, #4ade80, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -38,11 +39,27 @@
             <button onclick="logout()" class="p-2 glass rounded-lg text-[10px] font-bold text-rose-400">SALIR</button>
         </header>
 
-        <main id="view-dashboard" class="view active space-y-6">
-            <section id="proximos-pagos" class="glass p-6 rounded-[2.5rem] space-y-4">
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider italic">Calendario de Pagos</h3>
-                <div id="lista-pagos-tarjeta" class="space-y-3 text-sm"></div>
-            </section>
+       <main id="view-dashboard" class="view active space-y-6">
+    <section id="proximos-pagos" class="glass p-6 rounded-[2.5rem] space-y-4">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider italic">Calendario de Pagos</h3>
+        <div id="lista-pagos-tarjeta" class="space-y-3 text-sm"></div>
+    </section>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <section class="glass p-6 rounded-[2.5rem] space-y-4">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider italic">Distribución de Gastos</h3>
+            <div class="relative h-[250px] flex justify-center">
+                <canvas id="graficaGastos"></canvas>
+            </div>
+        </section>
+
+        <section class="glass p-6 rounded-[2.5rem] space-y-4">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider italic">Tus Cuentas</h3>
+            <div id="listaBalances" class="space-y-3 text-sm">
+                </div>
+        </section>
+    </div>
+</main>
 
             <section class="glass p-6 rounded-[2.5rem] space-y-4">
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Nuevo Registro</h3>
@@ -138,7 +155,7 @@
             cta?.tipo === 'credito' ? bloque.classList.remove('hidden') : bloque.classList.add('hidden');
         }
 
-        // --- 4. MOTOR DE DATOS ---
+ // --- 4. MOTOR DE DATOS ---
         async function cargarTodo() {
             const { data: { user } } = await _client.auth.getUser();
             if (!user) return;
@@ -146,6 +163,62 @@
             const { data: accs } = await _client.from('cuentas').select('*');
             const { data: cats } = await _client.from('categorias').select('*');
             const { data: movs } = await _client.from('movimientos').select('*').order('created_at', { ascending: false });
+
+            // 1. Aquí pones las llamadas a lo que ya tenías (ejemplo):
+            // renderizarMovimientos(movs);
+            // llenarSelects(accs, cats);
+
+            // 2. LLAMAMOS a la función del Dashboard pasando los datos que YA descargamos
+            actualizarDashboard(movs); 
+        }
+
+        // --- 5. FUNCIONES VISUALES (FUERA DE CARGARTODO) ---
+        function actualizarDashboard(movimientos) {
+            if (!movimientos) return;
+
+            // Procesamos datos para la gráfica de dona
+            const gastosPorCat = {};
+            movimientos.forEach(m => {
+                if (m.tipo === 'Gasto') {
+                    const cat = m.categoria || 'Sin Categoría';
+                    gastosPorCat[cat] = (gastosPorCat[cat] || 0) + m.monto;
+                }
+            });
+
+            const labels = Object.keys(gastosPorCat);
+            const dataValues = Object.values(gastosPorCat);
+
+            const canvas = document.getElementById('graficaGastos');
+            if (!canvas) return; // Seguridad por si no encuentra el elemento
+
+            const ctx = canvas.getContext('2d');
+            
+            if (window.miGrafica) {
+                window.miGrafica.destroy();
+            }
+
+            window.miGrafica = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataValues,
+                        backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#94a3b8', font: { size: 10 }, usePointStyle: true }
+                        }
+                    }
+                }
+            });
+        }
 
             // Rellenar Selects
             const sCuenta = document.getElementById('m-cuenta');
