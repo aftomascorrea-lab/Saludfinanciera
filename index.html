@@ -63,6 +63,7 @@
                             <option value="3">3 Meses</option>
                             <option value="6">6 Meses</option>
                             <option value="12">12 Meses</option>
+                            <option value="24">24 Meses</option>
                         </select>
                     </div>
                     <select id="m-categoria" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 text-sm"></select>
@@ -94,8 +95,8 @@
             <div class="glass p-5 rounded-2xl space-y-3">
                 <h3 class="text-xs font-bold text-slate-400 uppercase">Categorías</h3>
                 <div class="flex gap-2">
-                    <input id="cat-name-config" type="text" placeholder="Nueva Categoría" class="flex-1 p-3 rounded-lg bg-slate-900 border border-slate-700 text-xs">
-                    <button onclick="crearCategoria()" class="bg-emerald-500 px-4 rounded-lg font-bold">+</button>
+                    <input id="cat-name" type="text" placeholder="Nueva Categoría" class="flex-1 p-2 bg-slate-700 rouned text-sm">
+                    <button onclick="crearCategoria()" class="bg-emerald-600 px-4 rounded-lg font-bold">+</button>
                 </div>
                 <div id="lista-categorias" class="flex flex-wrap gap-2 pt-2"></div>
             </div>
@@ -227,29 +228,33 @@ async function guardarMovimiento() {
 }
 
 async function crearCategoria() {
-    const { data: { user } } = await _client.auth.getUser();
-    if (!user) return alert("Sesión expirada");
-
-    // 1. Capturamos el nombre desde el input correcto
-    const nombreDeLaCategoria = document.getElementById('cat-name').value;
+    console.log("Intentando crear categoría..."); // Esto debe salir en consola al dar click
     
-    if (!nombreDeLaCategoria) return alert("Escribe un nombre");
+    const { data: { user } } = await _client.auth.getUser();
+    if (!user) return alert("Error: No hay sesión activa");
 
-    // 2. Insertamos en la tabla 'categorias' (con S)
-    const { error } = await _client.from('categorias').insert([{ 
-        nombre: nombreDeLaCategoria, 
-        user_id: user.id 
-    }]);
+    const inputElement = document.getElementById('cat-name');
+    if (!inputElement) return alert("Error: No encontré el input 'cat-name' en el HTML");
+
+    const nombreFinal = inputElement.value;
+    console.log("Nombre capturado:", nombreFinal);
+
+    if (!nombreFinal) return alert("Escribe un nombre para la categoría");
+
+    // Insertamos asegurando que la tabla es 'categorias' (con S)
+    const { data, error } = await _client.from('categorias').insert([
+        { nombre: nombreFinal, user_id: user.id }
+    ]);
 
     if (error) {
-        alert("Error: " + error.message);
+        console.error("Error de Supabase:", error);
+        alert("Error al guardar: " + error.message);
     } else {
-        alert("✅ Categoría guardada");
-        document.getElementById('cat-name').value = '';
-        cargarTodo();
+        alert("✅ Categoría '" + nombreFinal + "' guardada con éxito");
+        inputElement.value = ''; // Limpiamos el campo
+        cargarTodo(); // Refrescamos la interfaz
     }
 }
-
 async function crearCuenta() {
     const { data: { user } } = await _client.auth.getUser();
     const nombre = document.getElementById('acc-name').value;
