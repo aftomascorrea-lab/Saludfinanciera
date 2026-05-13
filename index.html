@@ -218,10 +218,24 @@ async function cargarTodo() {
         }
 
             // Rellenar Selects
-            const sCuenta = document.getElementById('m-cuenta');
-            sCuenta.innerHTML = '<option value="efectivo">💵 Efectivo / Cash</option>';
-            cuentas?.forEach(c => sCuenta.innerHTML += `<option value="${c.id}">${c.tipo === 'credito'?'💳':'🏦'} ${c.nombre_institucion}</option>`);
+ function actualizarDashboard(movimientos, cuentas, categorias) {
 
+    // Rellenar Selects
+    const $Cuenta = document.getElementById("m-cuenta");
+
+    $Cuenta.innerHTML = `
+        <option value="efectivo">💵 Efectivo</option>
+    `;
+
+    cuentas?.forEach(c => {
+        $Cuenta.innerHTML += `
+            <option value="${c.id}">
+                ${c.tipo === "credito" ? "💳" : "🏦"}
+                ${c.nombre_institucion}
+            </option>
+        `;
+    });
+}
             const sCat = document.getElementById('m-categoria');
             const lCat = document.getElementById('lista-categorias');
             sCat.innerHTML = '<option value="general">📁 General</option>';
