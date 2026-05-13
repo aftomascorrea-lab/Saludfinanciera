@@ -156,19 +156,16 @@
         }
 
  // --- 4. MOTOR DE DATOS ---
-        async function cargarTodo() {
-            const { data: { user } } = await _client.auth.getUser();
-            if (!user) return;
+async function cargarTodo() {
+    const { data: { user } } = await _client.auth.getUser();
+    if (!user) return;
 
-            const { data: accs } = await _client.from('cuentas').select('*');
-            const { data: cats } = await _client.from('categorias').select('*');
-            const { data: movs } = await _client.from('movimientos').select('*').order('created_at', { ascending: false });
-
-            // 1. Aquí pones las llamadas a lo que ya tenías (ejemplo):
-            // renderizarMovimientos(movs);
-            // llenarSelects(accs, cats);
-
-            // 2. LLAMAMOS a la función del Dashboard pasando los datos que YA descargamos
+    // 1. DESCARGAMOS LOS DATOS (Fíjate en los nombres de la izquierda)
+    const { data: cuentas } = await _client.from('Cuentas').select('*');
+    const { data: categorias } = await _client.from('Categorias').select('*');
+    const { data: movimientos } = await _client.from('Movimientos').select('*').order('created_at', { ascending: false });
+          
+  // 2. LLAMAMOS a la función del Dashboard pasando los datos que YA descargamos
         actualizarDashboard(movimientos, cuentas, categorias);
         }
 
@@ -358,7 +355,7 @@ async function crearCuenta() {
         async function login() { 
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const { error } = await _client.auth.signInWithPassword({ email: e, password: p });
+            const { error } = await _client.auth.signInWithPassword({ email: email, password: password });
             if(error) alert(error.message);
         }
         async function logout() { await _client.auth.signOut(); location.reload(); }
