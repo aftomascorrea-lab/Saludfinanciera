@@ -254,16 +254,23 @@
 
             document.getElementById('patrimonio-neto').innerText = `$${(ti + tinv - tg - td).toLocaleString()}`;
             
-            // Calendario Pagos
-            const lPagos = document.getElementById('lista-pagos-tarjeta');
-            lPagos.innerHTML = '';
-         const totalPago = movimientos?.filter(m => m.cuenta_id === cta.id).reduce((s, m) => s + (m.monto / (m.msi_cuotas || 1)), 0);
-                const total = movs?.filter(m => m.cuenta_id === cta.id).reduce((s, m) => s + (m.monto/(m.msi_cuotas||1)), 0);
-                if(total > 0) lPagos.innerHTML += `<div class="flex justify-between bg-slate-900/50 p-3 rounded-xl">
-                    <p class="font-bold text-xs">${cta.nombre_institucion} (Día ${cta.fecha_pago})</p>
-                    <p class="text-rose-400 font-black">$${total.toFixed(2)}</p></div>`;
-            });
+          // // Calendario Pagos
+    const lPagos = document.getElementById('lista-pagos-tarjeta');
+    lPagos.innerHTML = '';
 
+    cuentas?.filter(cta => cta.tipo === 'credito').forEach(cta => {
+        const total = movimientos?.filter(m => m.cuenta_id === cta.id)
+                        .reduce((s, m) => s + (m.monto / (m.msi_cuotas || 1)), 0);
+
+        if (total > 0) {
+            lPagos.innerHTML += `
+                <div class="flex justify-between bg-slate-900/50 p-3 rounded-xl">
+                    <p class="font-bold text-xs">${cta.nombre_institucion} (Día ${cta.fecha_pago})</p>
+                    <p class="text-rose-400 font-black">$${total.toFixed(2)}</p>
+                </div>`;
+        }
+    }); // Aquí cerramos el forEach correctamente
+} // <--- ESTA LLAVE CIERRA LA FUNCIÓN actualizarDashboard
 // --- 5. ACCIONES REFORZADAS ---
 
 async function guardarMovimiento() {
