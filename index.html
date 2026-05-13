@@ -169,11 +169,11 @@
             // llenarSelects(accs, cats);
 
             // 2. LLAMAMOS a la función del Dashboard pasando los datos que YA descargamos
-            actualizarDashboard(movs); 
+        actualizarDashboard(movs, accs);
         }
 
         // --- 5. FUNCIONES VISUALES (FUERA DE CARGARTODO) ---
-        function actualizarDashboard(movimientos) {
+       function actualizarDashboard(movimientos, cuentas) {
             if (!movimientos) return;
 
             // Procesamos datos para la gráfica de dona
