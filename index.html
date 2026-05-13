@@ -173,7 +173,7 @@
         }
 
         // --- 5. FUNCIONES VISUALES (FUERA DE CARGARTODO) ---
-       function actualizarDashboard(movimientos, cuentas) {
+       function actualizarDashboard(movimientos, cuentas, categorias) {
            if (!movimientos || !cuentas) return;
 
             // Procesamos datos para la gráfica de dona
@@ -223,13 +223,13 @@
             // Rellenar Selects
             const sCuenta = document.getElementById('m-cuenta');
             sCuenta.innerHTML = '<option value="efectivo">💵 Efectivo / Cash</option>';
-            accs?.forEach(c => sCuenta.innerHTML += `<option value="${c.id}">${c.tipo === 'credito'?'💳':'🏦'} ${c.nombre_institucion}</option>`);
+            cuentas?.forEach(c => sCuenta.innerHTML += `<option value="${c.id}">${c.tipo === 'credito'?'💳':'🏦'} ${c.nombre_institucion}</option>`);
 
             const sCat = document.getElementById('m-categoria');
             const lCat = document.getElementById('lista-categorias');
             sCat.innerHTML = '<option value="general">📁 General</option>';
             lCat.innerHTML = '';
-            cats?.forEach(c => {
+            categorias?.forEach(c => {
                 sCat.innerHTML += `<option value="${c.nombre}">${c.nombre}</option>`;
                 lCat.innerHTML += `<span class="px-2 py-1 bg-slate-800 rounded-full text-[9px]">${c.nombre}</span>`;
             });
@@ -238,7 +238,7 @@
             let ti=0, tg=0, td=0, tinv=0;
             const lMov = document.getElementById('lista-movimientos');
             lMov.innerHTML = '';
-            movs?.forEach(m => {
+            movimientos?.forEach(m => {
                 const cuota = m.msi_cuotas > 1 ? (m.monto/m.msi_cuotas) : m.monto;
                 if(m.tipo==='ingreso') ti += m.monto;
                 else if(m.tipo==='gasto') tg += cuota;
