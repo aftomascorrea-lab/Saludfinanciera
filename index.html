@@ -176,7 +176,7 @@ async function cargarTodo() {
             // Procesamos datos para la gráfica de dona
             const gastosPorCat = {};
             movimientos.forEach(m => {
-                if (m.tipo === 'Gasto') {
+                if (m.tipo === 'gasto') {
                     const cat = m.categoria || 'Sin Categoría';
                     gastosPorCat[cat] = (gastosPorCat[cat] || 0) + m.monto;
                 }
@@ -216,10 +216,6 @@ async function cargarTodo() {
                 }
             });
         }
-
-            // Rellenar Selects
- function actualizarDashboard(movimientos, cuentas, categorias) {
-
     // Rellenar Selects
     const $Cuenta = document.getElementById("m-cuenta");
 
