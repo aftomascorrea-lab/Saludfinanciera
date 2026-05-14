@@ -58,10 +58,7 @@
             <div id="listaBalances" class="space-y-3 text-sm">
                 </div>
         </section>
-    </div>
-</main>
-
-            <section class="glass p-6 rounded-[2.5rem] space-y-4">
+                    <section class="glass p-6 rounded-[2.5rem] space-y-4">
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Nuevo Registro</h3>
                 <div class="space-y-3">
                     <input id="m-concepto" type="text" placeholder="Concepto" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 outline-none text-sm">
@@ -87,6 +84,9 @@
                     <button onclick="guardarMovimiento()" class="w-full bg-emerald-500 p-4 rounded-2xl font-black uppercase text-sm">Registrar</button>
                 </div>
             </section>
+    </div>
+</main>
+
         </main>
 
         <main id="view-movimientos" class="view space-y-4">
@@ -196,7 +196,18 @@ function actualizarInterfaz(movimientos, cuentas, categorias) {
         },
         options: { cutout: '70%', plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
     });
-
+    
+function actualizarCalendario(cuentas) {
+  const contenedor = document.getElementById('lista-pagos-tarjeta');
+  const tarjetasCredito = cuentas.filter(c => c.tipo === 'credito');
+  
+  contenedor.innerHTML = tarjetasCredito.map(t => `
+    <div class="p-3 glass flex justify-between border-l-4 border-rose-500">
+      <span class="font-bold">${t.nombre}</span>
+      <span>Paga el día: ${t.dia_pago || 'N/A'}</span>
+    </div>
+  `).join('');
+}
     // B. Rellenar Select de Cuentas y Lista de Cuentas
     const $selCuenta = document.getElementById("m-cuenta");
     const $listaBalances = document.getElementById("listaBalances");
